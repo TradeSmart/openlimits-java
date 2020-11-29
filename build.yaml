@@ -1,0 +1,109 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "Build environment for openlimits-java"
+Parameters:
+  BuildProjectName:
+    Type: String
+    Default: "openlimits-java"
+
+  GitRepositoryName:
+    Type: String
+    Default: openlimits-java
+
+  GitRepositoryBranch:
+    Type: String
+    Default: master
+
+  CodeArtifactDomain:
+    Type: String
+    Default: tuned
+
+Resources:
+  Region:
+    Type: "Custom::Region"
+    Properties:
+      ServiceToken: !Sub "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:infra-cf-short-region"
+      Region: !Ref AWS::Region
+
+  Project:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub "il-${BuildProjectName}-build"
+      Artifacts:
+        Type: NO_ARTIFACTS
+      BadgeEnabled: False
+      Environment:
+        ComputeType: BUILD_GENERAL1_LARGE
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
+        PrivilegedMode: false
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: CODEARTIFACT_REPOSITORY_URL
+            Type: PLAINTEXT
+            Value: !ImportValue "tuned:ci:artifacts:repositories:external-libraries:url:maven"
+          - Name: CODEARTIFACT_DOMAIN
+            Type: PLAINTEXT
+            Value: !Ref CodeArtifactDomain
+          - Name: AWS_ACCOUNT_ID
+            Type: PLAINTEXT
+            Value: !Ref AWS::AccountId
+      LogsConfig:
+        CloudWatchLogs:
+          GroupName: !ImportValue "tuned:ci:build-logs:group:name"
+          Status: ENABLED
+          StreamName: !Sub "il-${BuildProjectName}-build"
+      QueuedTimeoutInMinutes: 15
+      ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+      Source:
+        BuildSpec: buildspec.yml
+        SourceIdentifier: MainProject
+        Location: !Sub "https://github.com/TradeSmart/${GitRepositoryName}"
+        Type: GITHUB
+      SourceVersion: !Ref GitRepositoryBranch
+      TimeoutInMinutes: 10
+      Triggers:
+        FilterGroups:
+          - - Type: EVENT
+              Pattern: PUSH
+            - Type: HEAD_REF
+              Pattern: !Sub "^refs/heads/${GitRepositoryBranch}$"
+              ExcludeMatchedPattern: false
+        Webhook: True
+
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "ci-${Region.Short}-${BuildProjectName}-build"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Path: "/"
+      ManagedPolicyArns:
+        - !ImportValue "tuned:ci:artifacts:domain:policy:arn"
+        - !ImportValue "tuned:ci:artifacts:repositories:external-libraries:read-policy"
+        - !ImportValue "tuned:ci:policies:codebuild-base:arn"
+      Policies:
+        - PolicyName: CodeBuild
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              # todo: Can this be moved in tuned:ci:policies:codebuild-base:arn ?
+              - Effect: "Allow"
+                Resource:
+                  - !ImportValue "tuned:ci:build-logs:group:arn"
+                Action:
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+              - Effect: "Allow"
+                Action:
+                  - "codeartifact:PublishPackageVersion"
+                  - "codeartifact:PutPackageMetadata"
+                  - "codeartifact:DisposePackageVersions"
+                Resource:
+                  Fn::Sub:
+                    - "${BaseArn}/*"
+                    - BaseArn: !ImportValue "tuned:ci:artifacts:repositories:external-libraries:package-base-arn"

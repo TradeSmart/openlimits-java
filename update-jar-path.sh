@@ -6,7 +6,7 @@ if [[ -z "${ARTIFACT_VERSION}" ]]; then
   ARTIFACT_VERSION="$(cat "CLIENT_ARTIFACT_VERSION")"
 fi
 
-JAR_PATH=$(realpath "$SCRIPT_DIR/build/libs/nash-jni-$ARTIFACT_VERSION.jar")
+JAR_PATH=$(realpath "$SCRIPT_DIR/build/libs/openlimits-java-$ARTIFACT_VERSION.jar")
 
 if [[ -z "${GRADLE_DIR}" ]]; then
   GRADLE_DIR="${HOME}/.gradle"
@@ -26,9 +26,9 @@ if [[ -f "${GRADLE_PROPERTIES_FILE}" ]]; then
     exit 1
   fi
 
-  cat "${GRADLE_PROPERTIES_FILE}" | grep -v "^nashClientJarPath=" > "${TMP_FILE}"
+  cat "${GRADLE_PROPERTIES_FILE}" | grep -v "^openLimitsJavaClientJarPath=" > "${TMP_FILE}"
 
-  if ! echo "nashClientJarPath=${JAR_PATH}" >> "${TMP_FILE}"; then
+  if ! echo "openLimitsJavaClientJarPath=${JAR_PATH}" >> "${TMP_FILE}"; then
     echo >&2 "Unable to add new token to ${TMP_FILE}"
     exit 1
   fi
@@ -38,9 +38,9 @@ if [[ -f "${GRADLE_PROPERTIES_FILE}" ]]; then
     exit 1
   fi
 else
-  echo "nashClientJarPath=${JAR_PATH}" > "${GRADLE_PROPERTIES_FILE}"
+  echo "openLimitsJavaClientJarPath=${JAR_PATH}" > "${GRADLE_PROPERTIES_FILE}"
 fi
 
-echo "${GRADLE_PROPERTIES_FILE} updated - nashClientJarPath=${JAR_PATH}."
+echo "${GRADLE_PROPERTIES_FILE} updated - openLimitsJavaClientJarPath=${JAR_PATH}."
 echo "You may need to stop any running gradle daemons to ensure the changes take effect."
 echo "eg: \`./gradlew --stop\`"

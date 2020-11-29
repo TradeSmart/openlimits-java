@@ -70,25 +70,22 @@ public class NashClient {
     }
 
     private <T> T wrapCall(Callable<T> callable) {
-        while(true) {
+        int MAX_RETRY_LIMIT = 5;
+        for (int i = 0; i < MAX_RETRY_LIMIT; i++) {
             try {
                 return callable.call();
             }
             catch(NashProtocolError error) {
                 if (error.getMessage().contains("Could not register request with broker")) {
                     buildClient();
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                    }
                 }
                 else {
                     throw error;
                 }
             }
             catch(Exception error) {
-
             }
         }
+        throw new OpenLimitsException("Exceeded maximum retry limit of " + MAX_RETRY_LIMIT + "retries on Nash client");
     }
 }

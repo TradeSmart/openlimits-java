@@ -1,0 +1,36 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+      nodejs: 12
+    commands:
+      - echo Entered the install phase...
+      # It will be possible to remove these steps once newer AWS CLI versions are made available
+      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - unzip awscliv2.zip > /dev/null
+      - ./aws/install
+      # Amazon Linux does not have Rust (or wasm-pack) in a package manager
+      - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      - "source $HOME/.cargo/env"
+      # - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -y
+      # Maven is required to publish the resource JAR to CodeArtifact
+      - yum install -y maven
+  pre_build:
+    commands:
+      - "echo Current commit: $(git rev-parse HEAD)"
+      # Use the version specified in the `CLIENT_ARTIFACT_VERSION` to determine the jar version
+      - "ARTIFACT_VERSION=$(cat ./CLIENT_ARTIFACT_VERSION)"
+  build:
+    commands:
+      - ./gradlew build -x test
+      - ./build-jars.sh
+
+  post_build:
+    commands:
+      - "echo Build completed on `date`, publishing JAR for $ARTIFACT_VERSION"
+      - TUNED_NO_SSO="true" ./publish-jars.sh
+artifacts:
+  files:
+    - 'build/libs/openlimits-java*.jar'
