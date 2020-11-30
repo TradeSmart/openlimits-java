@@ -1,6 +1,8 @@
 package io.nash.openlimits;
 
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 
 /**
  * We are wrapping Nash calls to recreate the client after a "Could not register request with broker" error
@@ -67,6 +69,21 @@ public class NashClient {
 
     public  Candle[] getHistoricRates(GetHistoryRatesRequest req) {
         return wrapCall((Callable<Candle[]>) () -> client.getHistoricRates(req));
+    }
+
+    public void subscribeTrades(String market, Consumer<TradesResponse> onTrades) {
+        client.subscribeTrades(market, onTrades);
+
+    }
+    public void subscribeError(Consumer<OpenLimitsException> onError) {
+        client.subscribeError(onError);
+    }
+    public void subscribeDisconnect(Runnable onDisconnect) {
+        client.subscribeDisconnect(onDisconnect);
+    }
+
+    public void disconnect() {
+        client.disconnect();
     }
 
     private <T> T wrapCall(Callable<T> callable) {
