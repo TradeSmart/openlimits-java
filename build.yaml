@@ -40,7 +40,7 @@ Resources:
         EnvironmentVariables:
           - Name: CODEARTIFACT_REPOSITORY_URL
             Type: PLAINTEXT
-            Value: !ImportValue "tuned:ci:artifacts:repositories:external-libraries:url:maven"
+            Value: !ImportValue "tuned:ci:artifacts:repositories:internal-libraries:url:maven"
           - Name: CODEARTIFACT_DOMAIN
             Type: PLAINTEXT
             Value: !Ref CodeArtifactDomain
@@ -84,7 +84,7 @@ Resources:
       Path: "/"
       ManagedPolicyArns:
         - !ImportValue "tuned:ci:artifacts:domain:policy:arn"
-        - !ImportValue "tuned:ci:artifacts:repositories:external-libraries:read-policy"
+        - !ImportValue "tuned:ci:artifacts:repositories:internal-libraries:read-policy"
         - !ImportValue "tuned:ci:policies:codebuild-base:arn"
       Policies:
         - PolicyName: CodeBuild
@@ -106,4 +106,4 @@ Resources:
                 Resource:
                   Fn::Sub:
                     - "${BaseArn}/*"
-                    - BaseArn: !ImportValue "tuned:ci:artifacts:repositories:external-libraries:package-base-arn"
+                    - BaseArn: !ImportValue "tuned:ci:artifacts:repositories:internal-libraries:package-base-arn"
