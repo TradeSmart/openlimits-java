@@ -20,7 +20,7 @@ if [[ -z "${CODEARTIFACT_DOMAIN_OWNER}" ]]; then
 fi
 
 if [[ -z "${CODEARTIFACT_REPO}" ]]; then
-  CODEARTIFACT_REPO='external-libraries'
+  CODEARTIFACT_REPO='internal-libraries'
 fi
 
 ARTIFACT_GROUP='io.nash'
