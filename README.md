@@ -49,3 +49,13 @@ public class Example {
     }
 }
 ```
+
+# Deploy build
+```
+aws cloudformation deploy \
+    --template-file build.yaml \
+    --stack-name il-openlimits-java \
+    --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND \
+    --region us-east-1 \
+    --profile tuned-ss
+```
