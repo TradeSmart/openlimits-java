@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
-ROOT_DIR="$SCRIPT_DIR/"
+ROOT_DIR="$SCRIPT_DIR"
 
 if [[ -z "${CODEARTIFACT_AUTH_TOKEN}" ]]; then
   export CODEARTIFACT_AUTH_TOKEN="$(${SCRIPT_DIR}/get-codeartifact-token.sh)"
