@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
 }
 
-group 'io.nash'
+group 'com.tuned'
 version '0.1.2-SNAPSHOT'
 
 repositories {

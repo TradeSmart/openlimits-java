@@ -23,7 +23,7 @@ if [[ -z "${CODEARTIFACT_REPO}" ]]; then
   CODEARTIFACT_REPO='internal-libraries'
 fi
 
-ARTIFACT_GROUP='io.nash'
+ARTIFACT_GROUP='com.tuned'
 ARTIFACT_ID='openlimits-java'
 JAR_NAME="$ARTIFACT_ID-$ARTIFACT_VERSION.jar"
 JAR_PATH="$ROOT_DIR/build/libs/"

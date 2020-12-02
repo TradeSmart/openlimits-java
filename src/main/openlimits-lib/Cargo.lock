@@ -1230,7 +1230,7 @@ checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 [[package]]
 name = "openlimits"
 version = "0.1.4"
-source = "git+https://github.com/nash-io/openlimits?rev=master#a532ba2483dfebb073db78ba4eee42e6ea6c96c0"
+source = "git+https://github.com/nash-io/openlimits?rev=c6dd20f0bbe4881499ed6d8148e0ba78b8ed5069#c6dd20f0bbe4881499ed6d8148e0ba78b8ed5069"
 dependencies = [
  "async-trait",
  "base64 0.12.3",
