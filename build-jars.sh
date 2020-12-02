@@ -25,6 +25,7 @@ cd "$SOURCE_PATH" || exit;
 mkdir libs;
 cp "libopenlimits_java.$FILE_EXT" libs;
 jar xvf "openlimits-java-$ARTIFACT_VERSION.jar";
+mv libs io/nash/openlimits
 rm -rf "openlimits-java-$ARTIFACT_VERSION.jar";
 jar cf "openlimits-java-$ARTIFACT_VERSION.jar" *;
 echo "CREATED ${SOURCE_PATH}openlimits-java-${ARTIFACT_VERSION}.jar";
