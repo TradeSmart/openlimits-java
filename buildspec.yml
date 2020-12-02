@@ -17,7 +17,6 @@ phases:
       # - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -y
       # Maven is required to publish the resource JAR to CodeArtifact
       - yum install -y maven
-      - yum install -y openssl11
   pre_build:
     commands:
       - "echo Current commit: $(git rev-parse HEAD)"
