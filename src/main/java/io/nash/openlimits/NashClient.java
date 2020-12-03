@@ -44,10 +44,6 @@ public class NashClient {
         return wrapCall((Callable<Order>) () -> client.limitSell(request));
     }
 
-    public Order marketBuy(MarketRequest request) {
-        return wrapCall((Callable<Order>) () -> client.marketBuy(request));
-    }
-
     public Order marketSell(MarketRequest request) {
         return wrapCall((Callable<Order>) () -> client.marketSell(request));
     }
