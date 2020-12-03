@@ -6,7 +6,7 @@ Starting point for Openlimits wrapper in Java using rust-jni for java-python bin
 
 Make sure you have rust installed on your system.
 
-To build and update the jar paths run `./gradlew build -x test && ./build-jars.sh && ./update-jar-path.sh`
+To build and update the jar paths run `./gradlew assemble && ./build-jars.sh && ./update-jar-path.sh`
 
 # Deploy build
 ```
