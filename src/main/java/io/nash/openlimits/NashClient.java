@@ -89,7 +89,7 @@ public class NashClient {
                 return callable.call();
             }
             catch(NashProtocolError error) {
-                if (error.getMessage().contains("Could not register request with broker")) {
+                if (error.getMessage().contains("Could not register request with broker") || error.getMessage().contains("incoming WS channel failed, likely disconnected")) {
                     buildClient();
                 }
                 else {
