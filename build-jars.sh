@@ -21,6 +21,7 @@ esac
 
 SOURCE_PATH="$ROOT_DIR/build/libs/"
 
+cp "$ROOT_DIR/src/main/openlimits-lib/target/release/openlimits_java.$FILE_EXT" "$SOURCE_PATH/libopenlimits_java.$FILE_EXT";
 cd "$SOURCE_PATH" || exit;
 mkdir libs;
 cp "libopenlimits_java.$FILE_EXT" libs;

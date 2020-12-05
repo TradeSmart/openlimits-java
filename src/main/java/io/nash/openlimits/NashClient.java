@@ -14,7 +14,8 @@ public class NashClient {
     ExchangeClient client;
 
     private void buildClient() {
-        client = new ExchangeClient(
+        try {
+            client = new ExchangeClient(
                     new ExchangeClientConfig(
                             new NashConfig(
                                     credentials,
@@ -24,7 +25,11 @@ public class NashClient {
                                     "2PTzyS"
                             )
                     )
-        );
+            );
+        }
+        catch(Throwable t) {
+            throw new OpenLimitsException("Unable to create Nash client");
+        }
     }
 
     public NashClient() {
