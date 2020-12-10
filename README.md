@@ -8,7 +8,6 @@ Make sure you have rust installed on your system.
 
 To build and update the jar paths run `./gradlew assemble && ./build-jars.sh && ./update-jar-path.sh`
 
-# Deploy build
 ```
 aws cloudformation deploy \
     --template-file build.yaml \
