@@ -28,7 +28,8 @@ public class NashClient {
             );
         }
         catch(Throwable t) {
-            throw new OpenLimitsException("Unable to create Nash client");
+            t.printStackTrace();
+            throw new OpenLimitsException("Unable to create Nash client " + t.getMessage());
         }
     }
 
