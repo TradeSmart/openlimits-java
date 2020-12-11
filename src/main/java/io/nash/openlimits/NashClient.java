@@ -14,23 +14,17 @@ public class NashClient {
     ExchangeClient client;
 
     private void buildClient() {
-        try {
-            client = new ExchangeClient(
-                    new ExchangeClientConfig(
-                            new NashConfig(
-                                    credentials,
-                                    0,
-                                    "production",
-                                    10000,
-                                    "2PTzyS"
-                            )
-                    )
-            );
-        }
-        catch(Throwable t) {
-            t.printStackTrace();
-            throw new OpenLimitsException("Unable to create Nash client " + t.getMessage());
-        }
+        client = new ExchangeClient(
+                new ExchangeClientConfig(
+                        new NashConfig(
+                                credentials,
+                                0,
+                                "production",
+                                10000,
+                                "2PTzyS"
+                        )
+                )
+        );
     }
 
     public NashClient() {
