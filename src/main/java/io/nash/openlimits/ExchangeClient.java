@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class ExchangeClient {
+    static {
+        NativeLibLoader.loadLibraryFromJar("/libs/libopenlimits_java.so");
+    }
+
     private ExchangeClientConfig config;
 
     @SuppressWarnings("unused")
