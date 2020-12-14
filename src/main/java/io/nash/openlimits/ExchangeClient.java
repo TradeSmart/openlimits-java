@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 public class ExchangeClient {
     static {
-        NativeLibLoader.loadLibraryFromJar("/libs/libopenlimits_java.so");
+        NativeLibLoader.loadLibraryFromJar("/libs/libopenlimits_java");
     }
 
     private ExchangeClientConfig config;

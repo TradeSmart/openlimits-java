@@ -25,6 +25,12 @@ public class NativeLibLoader {
     private NativeLibLoader() {
     }
 
+    private static boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
+
+    private static boolean isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
+
+    private static String osSuffix = isWindows ? ".dll" : (isMac ? ".dylib" : ".so");
+
     /**
      * Loads library from current JAR archive
      *
@@ -40,6 +46,7 @@ public class NativeLibLoader {
      * @throws FileNotFoundException If the file could not be found inside the JAR.
      */
     public static void loadLibraryFromJar(String path) {
+        path = path + osSuffix;
 
         if (null == path || !path.startsWith("/")) {
             throw new IllegalArgumentException("The path has to be absolute (start with '/').");
