@@ -84,21 +84,22 @@ public class NashClient {
 
     private <T> T wrapCall(Callable<T> callable) {
         int MAX_RETRY_LIMIT = 5;
+        String lastErrorMessage = "";
         for (int i = 0; i < MAX_RETRY_LIMIT; i++) {
             try {
                 return callable.call();
             }
             catch(NashProtocolError error) {
-                if (error.getMessage().contains("Could not register request with broker") || error.getMessage().contains("incoming WS channel failed, likely disconnected")) {
-                    buildClient();
+                lastErrorMessage = error.getMessage();
+                buildClient();
+                try {
+                    Thread.sleep(1000);
                 }
-                else {
-                    throw error;
-                }
+                catch (Exception e){}
             }
             catch(Exception error) {
             }
         }
-        throw new OpenLimitsException("Exceeded maximum retry limit of " + MAX_RETRY_LIMIT + "retries on Nash client");
+        throw new OpenLimitsException("Exceeded maximum retry limit of " + MAX_RETRY_LIMIT + " retries on Nash client. " + lastErrorMessage);
     }
 }
