@@ -6,6 +6,11 @@ if [[ -z "${ARTIFACT_VERSION}" ]]; then
   ARTIFACT_VERSION="$(cat "CLIENT_ARTIFACT_VERSION")"
 fi
 
+if ! realpath / > /dev/null 2>&1; then
+    echo >&2 "realpath not installed. Are you on MacOS? run: brew install coreutils"
+    exit 1
+fi
+
 JAR_PATH=$(realpath "$SCRIPT_DIR/build/libs/openlimits-java-$ARTIFACT_VERSION.jar")
 
 if [[ -z "${GRADLE_DIR}" ]]; then
