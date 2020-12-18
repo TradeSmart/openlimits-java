@@ -196,9 +196,6 @@ public class ExchangeClient {
             System.out.println(orderbook);
         });
 
-        Thread.sleep(5000);
-        client.simulateSocketError();
-
     }
 
     public static void main(String[] args) {
