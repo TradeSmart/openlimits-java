@@ -24,7 +24,7 @@ phases:
       - "ARTIFACT_VERSION=$(cat ./CLIENT_ARTIFACT_VERSION)"
   build:
     commands:
-      - ./gradlew build -x test
+      - ./gradlew assemble
       - ./build-jars.sh
 
   post_build:
