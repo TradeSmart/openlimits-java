@@ -14,7 +14,7 @@ phases:
       # Amazon Linux does not have Rust (or wasm-pack) in a package manager
       - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
       - "source $HOME/.cargo/env"
-      - yum install gmp-devel.x86_64
+      - yum install -y gmp-devel.x86_64
       # - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -y
       # Maven is required to publish the resource JAR to CodeArtifact
       - yum install -y maven
