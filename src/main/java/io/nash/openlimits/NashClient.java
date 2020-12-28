@@ -1,6 +1,8 @@
 package io.nash.openlimits;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
@@ -12,6 +14,7 @@ import java.util.function.Consumer;
 public class NashClient {
     NashCredentials credentials;
     ExchangeClient client;
+    Map<String, Consumer<TradesResponse>> tradeSubscriptions = new HashMap<String, Consumer<TradesResponse>>();
 
     private void buildClient() {
         client = new ExchangeClient(
@@ -25,6 +28,10 @@ public class NashClient {
                         )
                 )
         );
+
+        for (Map.Entry<String,  Consumer<TradesResponse>> entry : tradeSubscriptions.entrySet()) {
+            subscribeTrades(entry.getKey(), entry.getValue());
+        }
     }
 
     public NashClient() {
@@ -68,6 +75,7 @@ public class NashClient {
     }
 
     public void subscribeTrades(String market, Consumer<TradesResponse> onTrades) {
+        tradeSubscriptions.put(market, onTrades);
         client.subscribeTrades(market, onTrades);
 
     }
