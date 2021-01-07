@@ -17,21 +17,37 @@ public class NashClient {
     Map<String, Consumer<TradesResponse>> tradeSubscriptions = new HashMap<String, Consumer<TradesResponse>>();
 
     private void buildClient() {
-        client = new ExchangeClient(
-                new ExchangeClientConfig(
-                        new NashConfig(
-                                credentials,
-                                0,
-                                "production",
-                                10000,
-                                "2PTzyS"
+        int MAX_RETRY_LIMIT = 5;
+        String lastErrorMessage = "";
+        for (int i = 0; i < MAX_RETRY_LIMIT; i++) {
+            try {
+                client = new ExchangeClient(
+                        new ExchangeClientConfig(
+                                new NashConfig(
+                                        credentials,
+                                        0,
+                                        "production",
+                                        10000,
+                                        "2PTzyS"
+                                )
                         )
-                )
-        );
-
-        for (Map.Entry<String,  Consumer<TradesResponse>> entry : tradeSubscriptions.entrySet()) {
-            subscribeTrades(entry.getKey(), entry.getValue());
+                );
+                for (Map.Entry<String,  Consumer<TradesResponse>> entry : tradeSubscriptions.entrySet()) {
+                    subscribeTrades(entry.getKey(), entry.getValue());
+                }
+                return;
+            }
+            catch(NashProtocolError error) {
+                lastErrorMessage = error.getMessage();
+                try {
+                    Thread.sleep(1000);
+                }
+                catch (Exception e){}
+            }
+            catch(Exception error) {
+            }
         }
+        throw new OpenLimitsException("Exceeded maximum retry limit of " + MAX_RETRY_LIMIT + " retries on Nash client. " + lastErrorMessage);
     }
 
     public NashClient() {
