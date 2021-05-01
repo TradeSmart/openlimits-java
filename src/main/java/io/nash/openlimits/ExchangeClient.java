@@ -13,6 +13,9 @@ public class ExchangeClient {
     private ExchangeClientConfig config;
 
     @SuppressWarnings("unused")
+    private long _thread_manager;
+
+    @SuppressWarnings("unused")
     private long _config;
 
     @SuppressWarnings("unused")
@@ -23,6 +26,9 @@ public class ExchangeClient {
 
     @SuppressWarnings("unused")
     private long _sub_tx;
+
+    @SupressWarnings("unused")
+    private long _thread_manager;
 
     @SuppressWarnings("unused")
     private long _handler_tx;
@@ -88,6 +94,7 @@ public class ExchangeClient {
     native private void subscribe(ExchangeClient client, Subscription subscription);
     native private void disconnect(ExchangeClient client);
     native private void disposeClient(ExchangeClient client);
+    native private void closeClient(ExchangeClient client);
     native private void simulateSocketError(ExchangeClient client);
 
     native private void init(ExchangeClient client, ExchangeClientConfig conf);
@@ -181,21 +188,23 @@ public class ExchangeClient {
         NashConfig config = new NashConfig(
                 new NashCredentials(secret, apiKey),
                 0,
-                "sandbox",
+                "production",
                 1000
         );
+
         final ExchangeClient client = new ExchangeClient(new ExchangeClientConfig(config));
         client.subscribeDisconnect(() -> {
             System.out.println("Disconnect");
         });
-        client.subscribeError(err -> {
-            System.out.println("err: " + err);
-            client.disconnect();
-        });
         client.subscribeOrderbook("btc_usdc", orderbook -> {
             System.out.println(orderbook);
+            client.disconnect();
         });
 
+    }
+
+    public void close() {
+        closeClient(this);
     }
 
     public static void main(String[] args) {
